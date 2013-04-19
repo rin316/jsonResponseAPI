@@ -11,12 +11,22 @@
 	// 拡張子がjsonかチェック
 	$ext = end(explode('.', $url));
 	if ($ext !== 'json') {
-	echo 'not json file...';
-	exit();
+		echo 'not json file...';
+		exit();
 	}
 
-	$json = file_get_contents($url,true);
+	$json = file_get_contents($url, true);
+
+	// get param に'id'が含まれる場合はそのidの値を返す
+	if ($get['id'] != '') {
+		$data = json_decode($json);
+		$data = $data -> {'id'} -> {$get['id']};
+		$json = json_encode($data);
+	}
+
 	echo $json;
+
+
 
 
 //	$url = str_replace([".", "/"], "", $url) . ".json";

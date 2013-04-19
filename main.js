@@ -14,9 +14,15 @@
 		}
 
 		var url = vars.url;
+		var id;
+		if (vars.id) {id = vars.id;};
 		$.ajax({
 			type: 'GET'
-			,url: 'json.php?url=' + url
+			,url: 'json.php'
+			,data: {
+				url: url
+				,id: id
+			}
 			,dataType:'json'
 			,success:function (res) {
 				console.log( res );
