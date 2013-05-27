@@ -1,24 +1,39 @@
 <?php
-	@include_once('./resources/php/dBug.phpa');
+	// setting
+	// 拡張子が json の場合のみ許可
+	$onlyJson = true;
+	// 同一階層のみ許可
+	$onlySameLayered = true;
+	
+	
+	
+	@include_once('./resources/php/dBug.php');
 //	header('Content-Type: text/html; charset=UTF-8');
 	header('Content-Type: application/json; charset=utf-8');
 
-	// h htmlspecialchars
+	// h = htmlspecialchars
 	$get = h($_GET);
 	$url = $get['url'];
-	$url = str_replace(['../', '/'], '', $url);
 
 	// 拡張子がjsonかチェック
-	$ext = end(explode('.', $url));
-	if ($ext !== 'json') {
-		echo 'not json file...';
-		exit();
+	if ($onlyJson) {
+		$extArray = explode('.', $url);
+		$ext = end($extArray);
+		if ($ext !== 'json') {
+			echo 'not json file...';
+			exit();
+		}
+	}
+	
+	// 同一階層以外を拒否
+	if ($onlySameLayered) {
+		$url = str_replace(['../', '/'], '', $url);
 	}
 
 	$json = file_get_contents($url, true);
 
 	// get param に'id'が含まれる場合はそのidの値を返す
-	if ($get['id'] != '') {
+	if (isset($get['id']) && $get['id'] != '') {
 		$data = json_decode($json);
 		$data = $data -> {'id'} -> {$get['id']};
 		$json = json_encode($data);
@@ -28,42 +43,12 @@
 
 
 
-
-//	$url = str_replace([".", "/"], "", $url) . ".json";
-//
-//	$json = file_get_contents($url,true);
-//	$data = json_decode($json);
-//
-//	if($url == 'mockdata1.json'){
-//		$output = $data -> {'id'} -> {$get['id']};
-//	} else if($url == 'mockdata2.json'){
-//		$output = $data -> {'no'} -> {$get['no']};
-//	} else if($url == 'mockdata3.json'){
-//		$id_arr = array();
-//		$params = explode("&", $_SERVER['QUERY_STRING']);
-//		foreach ($params as $param) {
-//			$par = explode("=", $param);
-//			if ($par[0] == "id") array_push($id_arr, $par[1]);
-//		}
-//
-//		for ($i = 0; $i < count($id_arr); $i++) {
-//			$output[$i] = $data -> {'results'}[$id_arr[$i]];
-//		}
-//	} else {
-//		$output = $data;
-//		$data -> {'results'} = $output;
-//
-//		//new dBug($data);
-//		echo json_encode($data);
-//	}
-
-
-		//htmlspecialchars
+	//htmlspecialchars
 	function h($str){
-	if(is_array($str)){
-		return array_map('h',$str);
-	}else{
-		return htmlspecialchars($str,ENT_QUOTES);
-	}
+		if(is_array($str)){
+			return array_map('h',$str);
+		}else{
+			return htmlspecialchars($str,ENT_QUOTES);
+		}
 	}
 ?>
