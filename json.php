@@ -7,7 +7,7 @@
 	
 	
 	
-	@include_once('./resources/php/dBug.php');
+//	@include_once('./resources/php/dBug.php');
 //	header('Content-Type: text/html; charset=UTF-8');
 	header('Content-Type: application/json; charset=utf-8');
 
